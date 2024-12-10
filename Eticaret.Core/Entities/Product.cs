@@ -15,7 +15,7 @@ namespace Eticaret.Core.Entities
         [Display(Name = "Resim")]
         public string? Image { get; set; }
 
-        [Display(Name = "Ücret")]
+        [Display(Name = "Fiyat")]
         public decimal Price { get; set; }
 
         [Display(Name = "Ürün Kodu")]
@@ -27,12 +27,20 @@ namespace Eticaret.Core.Entities
         [Display(Name = "Aktif?")]
         public bool IsActive { get; set; }
 
-        [Display(Name = "Anasayfa")]
+        [Display(Name = "Anasayfada Göster")]
         public bool IsHome { get; set; }
-		public int? CategoryId { get; set; }
-        public Category Category { get; set; }
-		public int? BrandId { get; set; }
-		public Brand Brand { get; set; }
+
+        [Display(Name = "Kategori")]
+        public int? CategoryId { get; set; }
+
+        [Display(Name = "Kategori")]
+        public Category? Category { get; set; }
+
+        [Display(Name = "Marka")]
+        public int? BrandId { get; set; }
+
+        [Display(Name = "Marka")]
+        public Brand? Brand { get; set; }
 
         [Display(Name = "Sıra Numarası")]
         public int OrderNo { get; set; }

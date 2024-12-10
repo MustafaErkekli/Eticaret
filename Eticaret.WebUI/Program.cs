@@ -1,3 +1,4 @@
+using Eticaret.Core.Constants;
 using Eticaret.Data;
 
 namespace Eticaret.WebUI
@@ -8,6 +9,7 @@ namespace Eticaret.WebUI
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
+            Parameters.ConnectionString =builder.Configuration.GetConnectionString("connection");
 			// Add services to the container.
 			builder.Services.AddControllersWithViews();
 			builder.Services.AddDbContext<DatabaseContext>();

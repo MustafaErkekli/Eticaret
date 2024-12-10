@@ -1,5 +1,6 @@
 ﻿using Eticaret.Core.Entities;
 using Eticaret.Data;
+using Eticaret.WebUI.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -50,10 +51,11 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Brand brand)
+        public async Task<IActionResult> Create(Brand brand,IFormFile? Logo)
         {
             if (ModelState.IsValid)
             {
+                brand.Logo=await FileHelper.FileLoaderAsync(Logo);
                 _context.Add(brand);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -82,7 +84,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Brand brand)
+        public async Task<IActionResult> Edit(int id, Brand brand, IFormFile? Logo)
         {
             if (id != brand.Id)
             {
@@ -93,6 +95,9 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
             {
                 try
                 {
+                    if(Logo is not null)
+                      brand.Logo = await FileHelper.FileLoaderAsync(Logo);
+
                     _context.Update(brand);
                     await _context.SaveChangesAsync();
                 }

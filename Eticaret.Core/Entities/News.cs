@@ -15,7 +15,7 @@ namespace Eticaret.Core.Entities
         [Display(Name = "Resim")]
         public string? Image { get; set; }
 
-        [Display(Name = "Akitf?")]
+        [Display(Name = "Aktif?")]
         public bool IsActive { get; set; }
 
         [Display(Name = "Kayıt Tarihi?"), ScaffoldColumn(false)]

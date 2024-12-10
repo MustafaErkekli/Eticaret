@@ -1,4 +1,5 @@
-﻿using Eticaret.Core.Entities;
+﻿using Eticaret.Core.Constants;
+using Eticaret.Core.Entities;
 using Eticaret.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,12 +23,14 @@ namespace Eticaret.Data
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
+            //"Data Source=DESKTOP-M24TL3H\\SQLEXPRESS; initial catalog=EticaretDb;uid=sa;pwd=123;TrustServerCertificate=true;Trusted_Connection=true;",options =>
+            //    options.CommandTimeout(180)
 
-			if (!optionsBuilder.IsConfigured)
+
+
+            if (!optionsBuilder.IsConfigured)
 			{
-				optionsBuilder.UseSqlServer("Data Source=DESKTOP-M24TL3H\\SQLEXPRESS; initial catalog=EticaretDb;uid=sa;pwd=123;TrustServerCertificate=true;Trusted_Connection=true;",options=>
-				options.CommandTimeout(180)
-				).EnableSensitiveDataLogging();
+				optionsBuilder.UseSqlServer(Parameters.ConnectionString, options => options.CommandTimeout(180)).EnableSensitiveDataLogging();
 			}
 			
 
