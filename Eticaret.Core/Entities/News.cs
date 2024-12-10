@@ -1,0 +1,24 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Eticaret.Core.Entities
+{
+	public class News: IEntity
+	{
+        public int Id { get; set; }
+
+        [Display(Name ="Ad")]
+        public string Name { get; set; }
+
+        [Display(Name = "Açıklamalar")]
+        public string? Description{ get; set; }
+
+        [Display(Name = "Resim")]
+        public string? Image { get; set; }
+
+        [Display(Name = "Akitf?")]
+        public bool IsActive { get; set; }
+
+        [Display(Name = "Kayıt Tarihi?"), ScaffoldColumn(false)]
+        public DateTime CreateDate { get; set; } = DateTime.Now;
+	}
+}
