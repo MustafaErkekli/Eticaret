@@ -33,8 +33,14 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-
-                    <img src="/Img/@Html.DisplayFor(modelItem => item.Logo)" height="60" width="80" />
+                    @if (!string.IsNullOrEmpty(item.Logo))
+                    {
+                        <img src="/Img/@Html.DisplayFor(modelItem => item.Logo)" height="60" width="80" style="border-radius: 5px;" />
+                    }
+                    else
+                    {
+                        <img src="/Img/no-img.png" height="60" width="80" style="border-radius: 5px;" />
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.IsActive)

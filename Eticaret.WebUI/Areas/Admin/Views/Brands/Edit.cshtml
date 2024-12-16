@@ -24,9 +24,12 @@
             <div class="form-group">
                 <label asp-for="Logo" class="control-label"></label>
                 <input asp-for="Logo" class="form-control" type="file" />
-                <span asp-validation-for="Logo" class="text-danger"></span>
+                <span asp-validation-for="Logo" class="text-danger mt-2"></span>
                 @if(Model.Logo!=null&&!string.IsNullOrWhiteSpace(Model.Logo)){
                     <img src="/Img/@Model.Logo" height="80" width="80" />
+                    <label class="form-check-label">
+                       @Html.CheckBox("cbRemoveFile") Logoyu Sil
+                    </label>
                 }
             </div>
             <div class="form-group form-check">
