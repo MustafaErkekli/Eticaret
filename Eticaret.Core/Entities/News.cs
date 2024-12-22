@@ -18,7 +18,7 @@ namespace Eticaret.Core.Entities
         [Display(Name = "Aktif?")]
         public bool IsActive { get; set; }
 
-        [Display(Name = "Kayıt Tarihi?"), ScaffoldColumn(false)]
+        [Display(Name = "Kayıt Tarihi"), ScaffoldColumn(false)]
         public DateTime CreateDate { get; set; } = DateTime.Now;
 	}
 }

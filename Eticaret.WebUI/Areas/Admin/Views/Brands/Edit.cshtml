@@ -11,6 +11,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="Logo" />
+            <input type="hidden" asp-for="CreateDate" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -26,7 +27,7 @@
                 <input asp-for="Logo" class="form-control" type="file" />
                 <span asp-validation-for="Logo" class="text-danger mt-2"></span>
                 @if(Model.Logo!=null&&!string.IsNullOrWhiteSpace(Model.Logo)){
-                    <img src="/Img/@Model.Logo" height="80" width="80" />
+                    <img src="/Img/Brands/@Model.Logo" height="80" width="80" />
                     <label class="form-check-label">
                        @Html.CheckBox("cbRemoveFile") Logoyu Sil
                     </label>

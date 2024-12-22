@@ -19,7 +19,7 @@ namespace Eticaret.Core.Entities
         [Display(Name = "Mesaj")]
         public string Message { get; set; }
 
-        [Display(Name = "Kayıt Tarihi?"), ScaffoldColumn(false)]
+        [Display(Name = "Kayıt Tarihi"), ScaffoldColumn(false)]
         public DateTime CreateDate { get; set; }=DateTime.Now;
     }
 }

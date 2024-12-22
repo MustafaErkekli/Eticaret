@@ -7,7 +7,7 @@
 <p>
     <a asp-action="Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i>Yeni Ekle</a>
 </p>
-<table class="table">
+<table class="table table-hover table-striped">
     <thead>
         <tr>
             <th>
@@ -22,6 +22,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.OrderNo)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -35,7 +38,7 @@
                 <td>
                     @if (!string.IsNullOrEmpty(item.Logo))
                     {
-                        <img src="/Img/@Html.DisplayFor(modelItem => item.Logo)" height="60" width="80" style="border-radius: 5px;" />
+                        <img src="/Img/Brands/@item.Logo" height="60" width="80" style="border-radius: 5px;" />
                     }
                     else
                     {
@@ -47,6 +50,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.OrderNo)
+                </td>
+                <td>
+                    @item.CreateDate.ToShortDateString()
                 </td>
                 <td>
                     <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-pen-to-square"></i>Düzenle</a>
