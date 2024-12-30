@@ -10,8 +10,11 @@
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-evenly">
+                <form action="/Products" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                    <input name="q" type="search" class="form-control form-control-dark text-bg-dark" placeholder="Ürün Ara..." aria-label="Search">
+                </form>
+                <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Anasayfa</a>
                     </li>
@@ -22,6 +25,36 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ContactUs">İletişim</a>
                     </li>
                 </ul>
+                @if (Context.User.Identity.IsAuthenticated)
+                {
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Hesabım
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/Account">Kullanıcı Bilgilerim</a></li>
+                            <li><a class="dropdown-item" href="/Account/">Siparişlerim</a></li>
+                            <li><a class="dropdown-item" href="/Account/">Değerlendirmelerim</a></li>
+                            <li><a class="dropdown-item" href="/Account/SignOut">Oturumu Kapat</a></li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Giriş Yap
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/Account/SignIn">Giriş</a></li>
+                            <li><a class="dropdown-item" href="/Account/SignUp">Üye Ol</a></li>
+                        </ul>
+                    </div>
+
+                }
+
             </div>
         </div>
     </nav>

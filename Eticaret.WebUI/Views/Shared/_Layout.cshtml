@@ -8,12 +8,14 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Eticaret.WebUI.styles.css" asp-append-version="true" />
     <link rel="icon" type="image/png" sizes="16x16" href="~/admin/assets/img/e-ticaret-logo.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
 
     <partial name="_Header" />
-
+   
     <div class="container">
+        @Html.Raw(TempData["Message"])
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

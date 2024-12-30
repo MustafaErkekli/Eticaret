@@ -13,9 +13,9 @@ namespace Eticaret.WebUI.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string q="")
         {
-            var databaseContext = _context.Products.Where(x=>x.IsActive).Include(p => p.Brand).Include(p => p.Category);
+            var databaseContext = _context.Products.Where(x=>x.IsActive&&x.Name.Contains(q)|| x.Description.Contains(q)).Include(p => p.Brand).Include(p => p.Category);
             return View(await databaseContext.ToListAsync());
         }
         public async Task<IActionResult> Details(int? id)
