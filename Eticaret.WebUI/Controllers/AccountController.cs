@@ -1,4 +1,5 @@
-﻿using Eticaret.Core.Entities;
+﻿using Azure;
+using Eticaret.Core.Entities;
 using Eticaret.Data;
 using Eticaret.WebUI.Models;
 using Microsoft.AspNetCore.Authentication;//login
@@ -21,13 +22,66 @@ namespace Eticaret.WebUI.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            return View();
+            AppUser user = _context.AppUsers.FirstOrDefault(x => x.UserGuid.ToString() == HttpContext.User.FindFirst("UserGuid").Value);
+            if (user is null)
+            {
+                return NotFound();
+            }
+            var model = new UserEditViewModel()
+            {
+                Email = user.Email,
+                Id = user.Id,
+                Name = user.Name,
+                Password = user.Password,
+                Phone = user.Phone,
+                Surname = user.Surname,
+            };
+            return View(model);
+        }
+        [HttpPost, Authorize]
+        public IActionResult Index(UserEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    AppUser user = _context.AppUsers.FirstOrDefault(x => x.UserGuid.ToString() == HttpContext.User.FindFirst("UserGuid").Value);
+                    if (user is not null)
+                    {
+                        user.Surname = model.Surname;
+                        user.Phone = model.Phone;
+                        user.Name = model.Name;
+                        user.Password = model.Password;
+                        user.Email = model.Email;
+
+                        _context.AppUsers.Update(user);
+                      var response=  _context.SaveChanges();
+                        if (response > 0)
+
+                        {
+                            //await MailHelper.SendMailAsync(contact);
+                            TempData["Message"] = @"<div class=""alert alert-success alert-dismissible fade show"" role=""alert"">
+  <strong>Bilgileriniz güncellenmiştir.</strong>
+  <button type=""button"" class=""btn-close"" data-bs-dismiss=""alert"" aria-label=""Close""></button>
+  </div>";
+
+                            return RedirectToAction("Index");
+                        }
+                    }
+                
+                }
+                catch (Exception)
+                {
+
+                    ModelState.AddModelError("", "Hata oluştu");
+                }
+            }
+            return View(model);
         }
         public IActionResult SignIn()
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> SignInAsync(LoginViewModel loginViewModel)
         {

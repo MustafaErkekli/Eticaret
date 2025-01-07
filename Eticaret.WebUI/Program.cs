@@ -14,6 +14,17 @@ namespace Eticaret.WebUI
             Parameters.ConnectionString = builder.Configuration.GetConnectionString("connection");
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //session iþlemleri
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.Name = ".Eticaret.Session";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout=TimeSpan.FromDays(1);   
+                options.IOTimeout=TimeSpan.FromMinutes(10); 
+            });  
+
             builder.Services.AddDbContext<DatabaseContext>();
             //login metodu için eklendi
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
@@ -45,6 +56,7 @@ namespace Eticaret.WebUI
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();   //session kullanma iþlemleri
 
             app.UseAuthentication();//önce oturum açma
             app.UseAuthorization(); //sonra yetkilendirme
