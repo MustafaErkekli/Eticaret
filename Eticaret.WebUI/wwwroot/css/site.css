@@ -16,6 +16,10 @@ html {
   position: relative;
   min-height: 100%;
 }
+.dropdown:hover .dropdown-menu{
+    display:block;
+}
+
 
 /*body {
   margin-bottom: 60px;

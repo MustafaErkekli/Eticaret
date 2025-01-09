@@ -1,5 +1,7 @@
 using Eticaret.Core.Constants;
 using Eticaret.Data;
+using Eticaret.Service.Abstract;
+using Eticaret.Service.Concrete;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 
@@ -26,6 +28,7 @@ namespace Eticaret.WebUI
             });  
 
             builder.Services.AddDbContext<DatabaseContext>();
+            builder.Services.AddScoped(typeof(IService<>),typeof(Service<>));
             //login metodu için eklendi
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
                 x =>

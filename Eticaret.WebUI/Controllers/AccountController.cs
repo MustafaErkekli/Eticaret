@@ -1,5 +1,4 @@
-﻿using Azure;
-using Eticaret.Core.Entities;
+﻿using Eticaret.Core.Entities;
 using Eticaret.Data;
 using Eticaret.WebUI.Models;
 using Microsoft.AspNetCore.Authentication;//login
@@ -18,6 +17,13 @@ namespace Eticaret.WebUI.Controllers
         {
             _context = context;
         }
+
+        //private readonly IService<AppUser> _appUserService;
+
+        //public AccountController(IService<AppUser> appUserService)
+        //{
+        //    _appUserService = appUserService;
+        //}
 
         [Authorize]
         public IActionResult Index()

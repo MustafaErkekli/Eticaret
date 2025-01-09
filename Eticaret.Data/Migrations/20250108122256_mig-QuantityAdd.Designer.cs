@@ -4,6 +4,7 @@ using Eticaret.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eticaret.Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250108122256_mig-QuantityAdd")]
+    partial class migQuantityAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,15 +78,15 @@ namespace Eticaret.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("180ab7f7-de83-44c5-8166-9fb6c9f4c24c"),
-                            CreateDate = new DateTime(2025, 1, 8, 15, 25, 46, 289, DateTimeKind.Local).AddTicks(8215),
+                            Id = new Guid("d9d58dc1-afe1-4325-9c28-2e1fb570c5d1"),
+                            CreateDate = new DateTime(2025, 1, 8, 15, 22, 55, 528, DateTimeKind.Local).AddTicks(7801),
                             Email = "admineticaret.com",
                             IsActive = true,
                             IsAdmin = true,
                             Name = "Test",
                             Password = "123456*",
                             Surname = "User",
-                            UserGuid = new Guid("f9eb5b50-e0d0-4a85-8723-f1352bc98a04"),
+                            UserGuid = new Guid("fbc7ada1-fe9a-4821-94e4-6a66a16c5f5d"),
                             UserName = "Admin"
                         });
                 });
@@ -165,7 +168,7 @@ namespace Eticaret.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2025, 1, 8, 15, 25, 46, 290, DateTimeKind.Local).AddTicks(1035),
+                            CreateDate = new DateTime(2025, 1, 8, 15, 22, 55, 529, DateTimeKind.Local).AddTicks(728),
                             IsActive = true,
                             IsTopMenu = true,
                             Name = "Elektronik",
@@ -175,7 +178,7 @@ namespace Eticaret.Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreateDate = new DateTime(2025, 1, 8, 15, 25, 46, 290, DateTimeKind.Local).AddTicks(1043),
+                            CreateDate = new DateTime(2025, 1, 8, 15, 22, 55, 529, DateTimeKind.Local).AddTicks(735),
                             IsActive = true,
                             IsTopMenu = true,
                             Name = "Bilgisayar",
@@ -298,6 +301,9 @@ namespace Eticaret.Data.Migrations
                     b.Property<string>("ProductCode")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");

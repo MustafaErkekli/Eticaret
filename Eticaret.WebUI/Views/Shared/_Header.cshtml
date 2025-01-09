@@ -1,7 +1,9 @@
-﻿<header>
+﻿@using Eticaret.WebUI.ExtensionMethods
+
+<header>
 
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
+        <div class="container">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                 <img src="~/admin/assets/img/e-ticaret-logo.png" height="50px;" width="50px;" />
                 Cartify
@@ -14,16 +16,13 @@
                 <form action="/Products" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
                     <input name="q" type="search" class="form-control form-control-dark text-bg-dark" placeholder="Ürün Ara..." aria-label="Search">
                 </form>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav m-auto">
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Anasayfa</a>
                     </li>
 
                     @await Component.InvokeAsync("Categories")
 
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ContactUs">İletişim</a>
-                    </li>
                 </ul>
                 @if (Context.User.Identity.IsAuthenticated)
                 {
@@ -59,6 +58,41 @@
                         Favorilerim
                     </a>
                 </div>
+                <div class="dropdown">
+                    @{
+                        var cart = Context.Session.GetJson<Eticaret.Service.Concrete.CartService>("Cart");
+                        if (cart != null && cart.CartLines.Count > 0)
+                        {
+                            <a class="dropdown-toggle nav-link text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sepetim
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                @foreach (var item in cart.CartLines)
+                                {
+                                    <li>
+                                        <a class="dropdown-item" href="/Products/Details/@item.Product.Id">
+                                            <img src="/Img/Products/@item.Product.Image" height="50" />
+                                            @item.Product.Name
+                                        </a>
+                                    </li>
+                                }
+                                <li class="text-center"><a class="btn btn-warning m-auto" href="/Cart">Sepete Git</a></li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <div class="dropdown">
+                                <a class="nav-link text-dark" href="/Cart">
+                                    Sepetim
+                                </a>
+                            </div>
+                        }
+
+                    }
+
+                </div>
+                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ContactUs">İletişim</a>
             </div>
         </div>
     </nav>

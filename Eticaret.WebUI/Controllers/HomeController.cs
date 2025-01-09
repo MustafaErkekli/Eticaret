@@ -1,29 +1,33 @@
 using Eticaret.Core.Entities;
-using Eticaret.Data;
+using Eticaret.Service.Abstract;
 using Eticaret.WebUI.Models;
-using Eticaret.WebUI.Utils;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Eticaret.WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly DatabaseContext _context;
+        private readonly IService<Product> _productService;
+        private readonly IService<Slider> _sliderService;
+        private readonly IService<News> _newService;
+        private readonly IService<Contact> _contactService;
 
-        public HomeController(DatabaseContext context)
+        public HomeController(IService<Product> productService, IService<Slider> sliderService, IService<News> newService, IService<Contact> contactService)
         {
-            _context = context;
+            _productService = productService;
+            _sliderService = sliderService;
+            _newService = newService;
+            _contactService = contactService;
         }
 
         public async Task<IActionResult> Index()
         {
             var model = new HomePageViewModel()
             {
-                Sliders = await _context.Sliders.ToListAsync(),
-                Products = await _context.Products.Where(p => p.IsActive && p.IsHome).ToListAsync(),
-                News = await _context.News.ToListAsync(),
+                Sliders = await _sliderService.GetAllAsync(),
+                Products = await _productService.GetAllAsync(p => p.IsActive && p.IsHome),
+                News = await _newService.GetAllAsync(),
             };
             return View(model);
         }
@@ -50,8 +54,8 @@ namespace Eticaret.WebUI.Controllers
             {
                 try
                 {
-                    await _context.Contacts.AddAsync(contact);
-                    var response =await _context.SaveChangesAsync();
+                    await _contactService.AddAsync(contact);
+                    var response =await _contactService.SaveChangesAsync();
                     if (response > 0)
 
                     {

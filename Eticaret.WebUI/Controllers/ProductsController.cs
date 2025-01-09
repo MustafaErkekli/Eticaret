@@ -1,4 +1,5 @@
-﻿using Eticaret.Data;
+﻿using Eticaret.Core.Entities;
+using Eticaret.Service.Abstract;
 using Eticaret.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,16 +8,17 @@ namespace Eticaret.WebUI.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly DatabaseContext _context;
+        private readonly IService<Product> _productService;
 
-        public ProductsController(DatabaseContext context)
+        public ProductsController(IService<Product> productService)
         {
-            _context = context;
+            _productService = productService;
         }
+
         public async Task<IActionResult> Index(string q="")
         {
-            var databaseContext = _context.Products.Where(x=>x.IsActive&&x.Name.Contains(q)|| x.Description.Contains(q)).Include(p => p.Brand).Include(p => p.Category);
-            return View(await databaseContext.ToListAsync());
+            var databaseContext = _productService.GetAllAsync(x=>x.IsActive&&x.Name.Contains(q)|| x.Description.Contains(q));
+            return View(await databaseContext);
         }
         public async Task<IActionResult> Details(int? id)
         {
@@ -25,7 +27,7 @@ namespace Eticaret.WebUI.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var product = await _productService.GetQueryable()
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -36,7 +38,7 @@ namespace Eticaret.WebUI.Controllers
             var model = new ProductDetailViewModel()
             {
                 Product = product,
-                RelatedProducts = _context.Products.Where(x => x.IsActive && x.CategoryId == product.CategoryId &&x.Id!=product.Id)
+                RelatedProducts = _productService.GetQueryable().Where(x => x.IsActive && x.CategoryId == product.CategoryId &&x.Id!=product.Id)
             };
             return View(model);
         }
