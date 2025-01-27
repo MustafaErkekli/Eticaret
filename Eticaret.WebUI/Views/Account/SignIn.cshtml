@@ -28,9 +28,22 @@
         </div>
         <input type="hidden" asp-for="ReturnUrl" value="@Context.Request.Query["ReturnUrl"]" />
         <button class="btn btn-primary w-100 py-2" type="submit">Giriş Yap</button>
-        <p class="mt-5 mb-3 text-body-secondary">© ERKEKLİ-2024</p>
+      
     </form>
+    <div class="row">
+        <div class="col-12 my-3">
+            <a href="/Account/SignUp" class="btn btn-info w-100 py-2">Üye Ol</a>
+        </div>
+        <div class="col-12">
+            <a href="/Account/PasswordRenew" class="btn btn-warning w-100 py-2">Şifremi Unuttum</a>
+        </div>
+        <p class="mt-5 mb-3 text-body-secondary">© ERKEKLİ-2024</p>
+    </div>
 </main>
+<hr />
+<p class="alert alert-light text-center m-auto">
+    Sipariş oluşturmak , kampanyalardan yararlanmak , siparişinizi takip etmek için lütfen sisteme giriş yapınız.
+</p>
 
 <style>
     html,

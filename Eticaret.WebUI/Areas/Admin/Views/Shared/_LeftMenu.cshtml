@@ -15,6 +15,10 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-user"></i></div>
                     Kullanıcı Yönetimi
                 </a>
+                <a class="nav-link" href="/Admin/Addresses">
+                    <div class="sb-nav-link-icon"><i class="fa fa-house"></i></div>
+                    Adres Yönetimi
+                </a>
                 <a class="nav-link" href="/Admin/Brands">
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-bookmark"></i></div>
                     Marka Yönetimi
@@ -39,11 +43,15 @@
                     <div class="sb-nav-link-icon"><i class="fa-solid fa-comments"></i></div>
                     İletişim Formları
                 </a>
+                <a class="nav-link" href="/Admin/Orders">
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                   Siparişler
+                </a>
             </div>
         </div>
         <div class="sb-sidenav-footer">
-            <div class="small">Logged in as:</div>
-           Admin
+            <div class="small">Hoşgeldin:</div>
+           @Context.User.Identity.Name
         </div>
     </nav>
 </div>

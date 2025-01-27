@@ -1,5 +1,6 @@
 ﻿using Eticaret.Core.Entities;
 using Eticaret.Data;
+using Eticaret.Service.Abstract;
 using Eticaret.WebUI.Models;
 using Microsoft.AspNetCore.Authentication;//login
 using Microsoft.AspNetCore.Authorization; //login
@@ -12,10 +13,12 @@ namespace Eticaret.WebUI.Controllers
     public class AccountController : Controller
     {
         private readonly DatabaseContext _context;
+        private readonly IService<Order> _orderService;
 
-        public AccountController(DatabaseContext context)
+        public AccountController(DatabaseContext context, IService<Order> orderService)
         {
             _context = context;
+            _orderService = orderService;
         }
 
         //private readonly IService<AppUser> _appUserService;
@@ -125,6 +128,23 @@ namespace Eticaret.WebUI.Controllers
             }
             return View(loginViewModel);
         }
+
+        [Authorize]
+        public  async Task<IActionResult> MyOrders()
+        {
+            AppUser user =await _context.AppUsers.FirstOrDefaultAsync(x => x.UserGuid.ToString() == HttpContext.User.FindFirst("UserGuid").Value);
+            if (user is null)
+            {
+
+                await HttpContext.SignOutAsync();
+                return RedirectToAction("SignIn");
+            }
+            int guidAsInt = user.Id.GetHashCode();  // GUID'yi int'e dönüştür
+            var model = await _orderService.GetQueryable()
+                .Where(s => s.AppUserId == guidAsInt).Include(o=>o.OrderLines).ThenInclude(p=>p.Product).ToListAsync();
+            return View(model);
+        }
+
         public IActionResult SignUp()
         {
             return View();

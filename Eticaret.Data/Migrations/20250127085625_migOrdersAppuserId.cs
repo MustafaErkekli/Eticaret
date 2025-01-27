@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Eticaret.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitailCreate : Migration
+    public partial class migOrdersAppuserId : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -97,7 +97,7 @@ namespace Eticaret.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(750)", maxLength: 750, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Image = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -121,6 +121,58 @@ namespace Eticaret.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sliders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    District = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    OpenAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsBillingAddress = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeliveryAddress = table.Column<bool>(type: "bit", nullable: false),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AddressGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Addresses_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AppUserId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    BillingAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    DeliveyAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -154,26 +206,71 @@ namespace Eticaret.Data.Migrations
                         name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderLines",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderLines", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderLines_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrderLines_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "AppUsers",
                 columns: new[] { "Id", "CreateDate", "Email", "IsActive", "IsAdmin", "Name", "Password", "Phone", "Surname", "UserGuid", "UserName" },
-                values: new object[,]
-                {
-                    { new Guid("533b755b-5c54-4f7d-aec3-0eea3fb1ddee"), new DateTime(2024, 12, 7, 14, 7, 41, 145, DateTimeKind.Local).AddTicks(6470), "admineticaret.com", true, true, "Test", "123456*", null, "User", new Guid("02d0618c-d94a-4dfe-8070-dd8daabe466f"), "Admin" },
-                    { new Guid("991adcb1-cfaa-45fd-be70-8c5ff84a0b70"), new DateTime(2024, 12, 7, 14, 7, 41, 145, DateTimeKind.Local).AddTicks(3107), "admineticaret.com", true, true, "Test", "123456*", null, "User", new Guid("91ab2b4b-fa48-4975-a012-0f7e39286632"), "Admin" }
-                });
+                values: new object[] { new Guid("29f4ae91-cf6f-4eac-81d3-9001925cf3bb"), new DateTime(2025, 1, 27, 11, 56, 24, 237, DateTimeKind.Local).AddTicks(354), "admineticaret.com", true, true, "Test", "123456*", null, "User", new Guid("af714f8c-2f27-4b7d-bef0-87accd1adaf5"), "Admin" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "CreateDate", "Description", "Image", "IsActive", "IsTopMenu", "Name", "OrderNo", "ParentId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 12, 7, 14, 7, 41, 145, DateTimeKind.Local).AddTicks(9155), null, null, true, true, "Elektronik", 1, 0 },
-                    { 2, new DateTime(2024, 12, 7, 14, 7, 41, 145, DateTimeKind.Local).AddTicks(9162), null, null, true, true, "Bilgisayar", 2, 0 }
+                    { 1, new DateTime(2025, 1, 27, 11, 56, 24, 239, DateTimeKind.Local).AddTicks(7245), null, null, true, true, "Elektronik", 1, 0 },
+                    { 2, new DateTime(2025, 1, 27, 11, 56, 24, 239, DateTimeKind.Local).AddTicks(8553), null, null, true, true, "Bilgisayar", 2, 0 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_AppUserId",
+                table: "Addresses",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderLines_OrderId",
+                table: "OrderLines",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderLines_ProductId",
+                table: "OrderLines",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_AppUserId1",
+                table: "Orders",
+                column: "AppUserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
@@ -190,7 +287,7 @@ namespace Eticaret.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AppUsers");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "Contacts");
@@ -199,10 +296,19 @@ namespace Eticaret.Data.Migrations
                 name: "News");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "OrderLines");
 
             migrationBuilder.DropTable(
                 name: "Sliders");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "AppUsers");
 
             migrationBuilder.DropTable(
                 name: "Brands");

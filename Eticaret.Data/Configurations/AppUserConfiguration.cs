@@ -16,10 +16,10 @@ namespace Eticaret.Data.Configurations
 			builder.Property(x => x.UserName).HasColumnType("varchar(50)").HasMaxLength(50);
 
 			builder.HasData(
-				
+
 					new AppUser
 					{
-					
+
 						Id = Guid.NewGuid(),
 						Name = "Test",
 						UserName = "Admin",
