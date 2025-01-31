@@ -20,7 +20,7 @@ namespace Eticaret.Data.Configurations
 					new AppUser
 					{
 
-						Id = Guid.NewGuid(),
+						Id =1001,
 						Name = "Test",
 						UserName = "Admin",
 						Email = "admineticaret.com",

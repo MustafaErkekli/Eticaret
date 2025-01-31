@@ -22,6 +22,9 @@
             <th class="text-bg-dark">
                 Sipariş Özeti
             </th>
+            <th class="text-bg-dark">
+                @Html.DisplayNameFor(model => model.OrderState)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -47,9 +50,12 @@
                 <td>
                     @item.OrderLines.Count Ürün
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderState)
+                </td>
             </tr>
             <tr>
-                <td colspan="4">
+                <td colspan="5">
                     <table class="table table-sm">
                         <tr>
                             <th></th>
@@ -81,7 +87,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="4" class="text-end font-weight-bold">
+                <td colspan="5" class="text-end font-weight-bold">
                     <strong class="text-bg-danger">Genel Toplam: @orderTotal.ToString("c")</strong>
                 </td>
             </tr>

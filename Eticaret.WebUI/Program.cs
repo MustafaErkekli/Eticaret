@@ -1,8 +1,8 @@
-using Eticaret.Core.Constants;
 using Eticaret.Data;
 using Eticaret.Service.Abstract;
 using Eticaret.Service.Concrete;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Eticaret.WebUI
@@ -13,7 +13,7 @@ namespace Eticaret.WebUI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            Parameters.ConnectionString = builder.Configuration.GetConnectionString("connection");
+            //Parameters.ConnectionString = builder.Configuration.GetConnectionString("connection");
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -25,9 +25,12 @@ namespace Eticaret.WebUI
                 options.Cookie.IsEssential = true;
                 options.IdleTimeout=TimeSpan.FromDays(1);   
                 options.IOTimeout=TimeSpan.FromMinutes(10); 
-            });  
+            });
 
-            builder.Services.AddDbContext<DatabaseContext>();
+            builder.Services.AddDbContext<DatabaseContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("connection"));
+            });
             builder.Services.AddScoped(typeof(IService<>),typeof(Service<>));
             //login metodu için eklendi
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(

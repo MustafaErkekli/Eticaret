@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Rendering; //selectlist
 using Microsoft.EntityFrameworkCore;
 using Eticaret.Core.Entities;
 using Eticaret.Data;
 using Microsoft.AspNetCore.Authorization;
+using Eticaret.WebUI.Areas.Admin.Enums;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Eticaret.WebUI.Areas.Admin.Controllers
 {
@@ -35,7 +37,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders
+            var order = await _context.Orders.Include(u=>u.AppUser).Include(o=>o.OrderLines).ThenInclude(p=>p.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -52,11 +54,9 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         }
 
         // POST: Admin/Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OrderNumber,TotalPrice,AppUserId,CustomerId,BillingAddress,DeliveyAddress,OrderDate")] Order order)
+        public async Task<IActionResult> Create( Order order)
         {
             if (ModelState.IsValid)
             {
@@ -75,20 +75,20 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders.Include(u => u.AppUser).Include(o => o.OrderLines).ThenInclude(p => p.Product)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
                 return NotFound();
             }
+            ViewBag.OrderStates = EnumHelper.GetSelectList<EnumOrderState>();
             return View(order);
         }
 
         // POST: Admin/Orders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OrderNumber,TotalPrice,AppUserId,CustomerId,BillingAddress,DeliveyAddress,OrderDate")] Order order)
+        public async Task<IActionResult> Edit(int id, Order order)
         {
             if (id != order.Id)
             {
@@ -110,11 +110,12 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError("", "Hata Oluştu");
                     }
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.OrderStates = EnumHelper.GetSelectList<EnumOrderState>();
             return View(order);
         }
 
@@ -126,8 +127,8 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var order = await _context.Orders.Include(u => u.AppUser)
+                  .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
                 return NotFound();

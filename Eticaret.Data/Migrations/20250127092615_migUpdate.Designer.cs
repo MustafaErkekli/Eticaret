@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eticaret.Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250127085625_migOrdersAppuserId")]
-    partial class migOrdersAppuserId
+    [Migration("20250127092615_migUpdate")]
+    partial class migUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,8 +36,8 @@ namespace Eticaret.Data.Migrations
                     b.Property<Guid?>("AddressGuid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -79,9 +79,11 @@ namespace Eticaret.Data.Migrations
 
             modelBuilder.Entity("Eticaret.Core.Entities.AppUser", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -130,15 +132,15 @@ namespace Eticaret.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("29f4ae91-cf6f-4eac-81d3-9001925cf3bb"),
-                            CreateDate = new DateTime(2025, 1, 27, 11, 56, 24, 237, DateTimeKind.Local).AddTicks(354),
+                            Id = 1001,
+                            CreateDate = new DateTime(2025, 1, 27, 12, 26, 15, 34, DateTimeKind.Local).AddTicks(1415),
                             Email = "admineticaret.com",
                             IsActive = true,
                             IsAdmin = true,
                             Name = "Test",
                             Password = "123456*",
                             Surname = "User",
-                            UserGuid = new Guid("af714f8c-2f27-4b7d-bef0-87accd1adaf5"),
+                            UserGuid = new Guid("75136c6c-4da2-42fc-ae54-192c580bd93c"),
                             UserName = "Admin"
                         });
                 });
@@ -220,7 +222,7 @@ namespace Eticaret.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2025, 1, 27, 11, 56, 24, 239, DateTimeKind.Local).AddTicks(7245),
+                            CreateDate = new DateTime(2025, 1, 27, 12, 26, 15, 36, DateTimeKind.Local).AddTicks(7936),
                             IsActive = true,
                             IsTopMenu = true,
                             Name = "Elektronik",
@@ -230,7 +232,7 @@ namespace Eticaret.Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreateDate = new DateTime(2025, 1, 27, 11, 56, 24, 239, DateTimeKind.Local).AddTicks(8553),
+                            CreateDate = new DateTime(2025, 1, 27, 12, 26, 15, 36, DateTimeKind.Local).AddTicks(9335),
                             IsActive = true,
                             IsTopMenu = true,
                             Name = "Bilgisayar",
@@ -320,9 +322,6 @@ namespace Eticaret.Data.Migrations
                     b.Property<int>("AppUserId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("AppUserId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("BillingAddress")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -351,7 +350,7 @@ namespace Eticaret.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId1");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Orders");
                 });
@@ -485,7 +484,9 @@ namespace Eticaret.Data.Migrations
                 {
                     b.HasOne("Eticaret.Core.Entities.AppUser", "AppUser")
                         .WithMany()
-                        .HasForeignKey("AppUserId1");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
                 });

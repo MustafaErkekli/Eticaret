@@ -2,36 +2,37 @@
 using Eticaret.Data;
 using Eticaret.Service.Abstract;
 using Eticaret.WebUI.Models;
+using Eticaret.WebUI.Utils;
 using Microsoft.AspNetCore.Authentication;//login
 using Microsoft.AspNetCore.Authorization; //login
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Security.Claims;  //login
 
 namespace Eticaret.WebUI.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly DatabaseContext _context;
-        private readonly IService<Order> _orderService;
+        //private readonly DatabaseContext _context;
 
-        public AccountController(DatabaseContext context, IService<Order> orderService)
+        //public AccountController(DatabaseContext context)
+        //{
+        //    _context = context;
+        //}
+        private readonly IService<AppUser> _service;
+        private readonly IService<Order> _serviceOrder;
+
+        public AccountController(IService<AppUser> service, IService<Order> serviceOrder)
         {
-            _context = context;
-            _orderService = orderService;
+            _service = service;
+            _serviceOrder = serviceOrder;
         }
 
-        //private readonly IService<AppUser> _appUserService;
-
-        //public AccountController(IService<AppUser> appUserService)
-        //{
-        //    _appUserService = appUserService;
-        //}
-
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            AppUser user = _context.AppUsers.FirstOrDefault(x => x.UserGuid.ToString() == HttpContext.User.FindFirst("UserGuid").Value);
+            AppUser user = await _service.GetAsync(x => x.UserGuid.ToString() == HttpContext.User.FindFirst("UserGuid").Value);
             if (user is null)
             {
                 return NotFound();
@@ -43,18 +44,18 @@ namespace Eticaret.WebUI.Controllers
                 Name = user.Name,
                 Password = user.Password,
                 Phone = user.Phone,
-                Surname = user.Surname,
+                Surname = user.Surname
             };
             return View(model);
         }
         [HttpPost, Authorize]
-        public IActionResult Index(UserEditViewModel model)
+        public async Task<IActionResult> IndexAsync(UserEditViewModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    AppUser user = _context.AppUsers.FirstOrDefault(x => x.UserGuid.ToString() == HttpContext.User.FindFirst("UserGuid").Value);
+                    AppUser user = await _service.GetAsync(x => x.UserGuid.ToString() == HttpContext.User.FindFirst("UserGuid").Value);
                     if (user is not null)
                     {
                         user.Surname = model.Surname;
@@ -63,8 +64,8 @@ namespace Eticaret.WebUI.Controllers
                         user.Password = model.Password;
                         user.Email = model.Email;
 
-                        _context.AppUsers.Update(user);
-                      var response=  _context.SaveChanges();
+                        _service.Update(user);
+                        var response = _service.SaveChanges();
                         if (response > 0)
 
                         {
@@ -77,7 +78,7 @@ namespace Eticaret.WebUI.Controllers
                             return RedirectToAction("Index");
                         }
                     }
-                
+
                 }
                 catch (Exception)
                 {
@@ -98,7 +99,7 @@ namespace Eticaret.WebUI.Controllers
             {
                 try
                 {
-                    var account = await _context.AppUsers.FirstOrDefaultAsync(x => x.Email == loginViewModel.Email && x.Password == loginViewModel.Password && x.IsActive);
+                    var account = await _service.GetAsync(x => x.Email == loginViewModel.Email & x.Password == loginViewModel.Password & x.IsActive);
                     if (account == null)
                     {
                         ModelState.AddModelError("", "Kullanıcı adı veya şifre yanlış");
@@ -130,18 +131,16 @@ namespace Eticaret.WebUI.Controllers
         }
 
         [Authorize]
-        public  async Task<IActionResult> MyOrders()
+        public async Task<IActionResult> MyOrders()
         {
-            AppUser user =await _context.AppUsers.FirstOrDefaultAsync(x => x.UserGuid.ToString() == HttpContext.User.FindFirst("UserGuid").Value);
+            AppUser user = await _service.GetAsync(x => x.UserGuid.ToString() == HttpContext.User.FindFirst("UserGuid").Value);
             if (user is null)
             {
 
                 await HttpContext.SignOutAsync();
                 return RedirectToAction("SignIn");
             }
-            int guidAsInt = user.Id.GetHashCode();  // GUID'yi int'e dönüştür
-            var model = await _orderService.GetQueryable()
-                .Where(s => s.AppUserId == guidAsInt).Include(o=>o.OrderLines).ThenInclude(p=>p.Product).ToListAsync();
+            var model = _serviceOrder.GetQueryable().Where(s => s.AppUserId == user.Id).Include(o => o.OrderLines).ThenInclude(p => p.Product);
             return View(model);
         }
 
@@ -158,17 +157,97 @@ namespace Eticaret.WebUI.Controllers
             if (ModelState.IsValid)
             {
                 //appUser.Id = Guid.NewGuid();
-                await _context.AddAsync(appUser);
-                await _context.SaveChangesAsync();
+                await _service.AddAsync(appUser);
+                await _service.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(appUser);
 
         }
+
         public async Task<IActionResult> SignOutAsync()
         {
             await HttpContext.SignOutAsync();
             return RedirectToAction("SignIn");
+        }
+        public IActionResult PasswordRenew()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> PasswordRenew(string Email)
+        {
+            if (string.IsNullOrWhiteSpace(Email))
+            {
+                ModelState.AddModelError("", "Email Boş Geçilemez");
+                return View();
+            }
+            AppUser user = await _service.GetAsync(x => x.Email == Email);
+            if (user is null)
+            {
+                ModelState.AddModelError("", "Bu Email Adresi Geçersizdir.");
+                return View();
+            }
+            string mesaj = $"Sayın {user.Name} {user.Surname} <br> Şifrenizi Yenilemek İçin Lütfen :<a href='https://localhost:7261/Account/PasswordChange?user={user.UserGuid.ToString()}'>Buraya Tıklayınız</a>";
+
+            var response = await MailHelper.SendMailAsync(Email, "Şifremi Yenile", mesaj,"cartify.com");
+            if (response)
+            {
+                TempData["Message"] = @"<div class=""alert alert-success alert-dismissible fade show"" role=""alert"">
+  <strong>Şifre Sıfırlama Bağlantınız Mail Adresinize Gönderilmiştir.</strong>
+  <button type=""button"" class=""btn-close"" data-bs-dismiss=""alert"" aria-label=""Close""></button>
+  </div>";
+            }
+            else
+            {
+                TempData["Message"] = @"<div class=""alert alert-danger alert-dismissible fade show"" role=""alert"">
+  <strong>Şifre Sıfırlama Bağlantınız Mail Adresinize Gönderilemedi.</strong>
+  <button type=""button"" class=""btn-close"" data-bs-dismiss=""alert"" aria-label=""Close""></button>
+  </div>";
+            }
+            return View();
+        }
+        public async Task<IActionResult> PasswordChange(string user)
+        {
+            if (user is null)
+            {
+                return BadRequest("Geçersiz İstek");
+            }
+            AppUser appUser = await _service.GetAsync(x => x.UserGuid.ToString() == user);
+            if (user is null)
+            {
+                return NotFound("Geçersiz Değer.");
+            }
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> PasswordChange(string user ,string Password)
+        {
+            if (user is null)
+            {
+                return BadRequest("Geçersiz İstek");
+            }
+            AppUser appUser = await _service.GetAsync(x => x.UserGuid.ToString() == user);
+            if (appUser is null)
+            {
+                ModelState.AddModelError("", "Geçersiz Değer.");
+                return View();
+            }
+            appUser.Password = Password;
+            var response = await _service.SaveChangesAsync();
+            if (response>0)
+            {
+                TempData["Message"] = @"<div class=""alert alert-success alert-dismissible fade show"" role=""alert"">
+  <strong>Şifreniz Güncellenmiştir! Giriş Ekranından Oturum Açabilirsiniz.</strong>
+  <button type=""button"" class=""btn-close"" data-bs-dismiss=""alert"" aria-label=""Close""></button>
+  </div>";
+            }
+            else
+            {
+                ModelState.AddModelError("", "Güncelleme Başarısız");
+            }
+
+            return View();
         }
     }
 }

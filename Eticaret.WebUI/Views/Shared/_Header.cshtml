@@ -2,14 +2,14 @@
 
 <header>
 
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+            <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">
                 <img src="~/admin/assets/img/e-ticaret-logo.png" height="50px;" width="50px;" />
                 Cartify
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-evenly">
@@ -18,7 +18,7 @@
                 </form>
                 <ul class="navbar-nav m-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Anasayfa</a>
+                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door-fill"></i>Anasayfa</a>
                     </li>
 
                     @await Component.InvokeAsync("Categories")
@@ -27,8 +27,8 @@
                 @if (Context.User.Identity.IsAuthenticated)
                 {
                     <div class="dropdown">
-                        <a class="dropdown-toggle nav-link text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Hesabım
+                        <a class="dropdown-toggle nav-link text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-fill"></i> Hesabım
                         </a>
 
                         <ul class="dropdown-menu">
@@ -43,8 +43,8 @@
                 else
                 {
                     <div class="dropdown">
-                        <a class="dropdown-toggle nav-link text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Giriş Yap
+                        <a class="dropdown-toggle nav-link text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person"></i> Giriş Yap
                         </a>
 
                         <ul class="dropdown-menu">
@@ -55,8 +55,18 @@
 
                 }
                 <div class="dropdown mx-3">
-                    <a class="nav-link text-dark" href="/Favorites">
-                        Favorilerim
+                    <a class="nav-link text-white" href="/Favorites">
+                        @{
+                            var favorites = Context.Session.GetJson<List<Product>>("GetFavorites");
+                            if (favorites is not null && favorites.Count>0)
+                            {
+                                    <i class="bi bi-heart-fill"></i>  @:Favorilerim(@favorites.Count)
+                            }
+                            else
+                            {
+                                <i class="bi bi-heart"></i>  @:Favorilerim
+                            }
+                        }
                     </a>
                 </div>
                 <div class="dropdown me-3">
@@ -64,7 +74,7 @@
                         var cart = Context.Session.GetJson<Eticaret.Service.Concrete.CartService>("Cart");
                         if (cart != null && cart.CartLines.Count > 0)
                         {
-                            <a class="dropdown-toggle nav-link text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="dropdown-toggle nav-link text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Sepetim
                                 <span class="badge bg-danger text-white ms-1 rounded-pill">
                                     @cart.CartLines.Count
@@ -87,8 +97,8 @@
                         else
                         {
                             <div class="dropdown">
-                                <a class="nav-link text-dark" href="/Cart">
-                                    Sepetim
+                                <a class="nav-link text-white" href="/Cart">
+                                    <i class="bi bi-cart-fill"></i>  Sepetim
                                 </a>
                             </div>
                         }
@@ -96,7 +106,7 @@
                     }
 
                 </div>
-                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ContactUs">İletişim</a>
+                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="ContactUs"><i class="bi bi-telephone-fill"></i>İletişim</a>
             </div>
         </div>
     </nav>

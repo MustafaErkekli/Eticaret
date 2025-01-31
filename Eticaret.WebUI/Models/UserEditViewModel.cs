@@ -4,18 +4,14 @@ namespace Eticaret.WebUI.Models
 {
     public class UserEditViewModel
     {
-        public Guid Id { get; set; }
-
-        [Display(Name = "Ad")]
+        public int Id { get; set; }
+        [Display(Name = "Adı")]
         public string Name { get; set; }
-
-        [Display(Name = "Soyad")]
+        [Display(Name = "Soyadı")]
         public string Surname { get; set; }
         public string Email { get; set; }
-
         [Display(Name = "Telefon")]
         public string? Phone { get; set; }
-
         [Display(Name = "Şifre")]
         public string Password { get; set; }
     }

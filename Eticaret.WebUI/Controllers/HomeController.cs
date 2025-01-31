@@ -27,7 +27,7 @@ namespace Eticaret.WebUI.Controllers
             {
                 Sliders = await _sliderService.GetAllAsync(),
                 Products = await _productService.GetAllAsync(p => p.IsActive && p.IsHome),
-                News = await _newService.GetAllAsync(),
+                News = await _newService.GetAllAsync(n=>n.IsActive),
             };
             return View(model);
         }

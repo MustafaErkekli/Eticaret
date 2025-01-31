@@ -24,7 +24,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         }
 
         // GET: Admin/AppUsers/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -56,7 +56,6 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                appUser.Id = Guid.NewGuid();
                 _context.Add(appUser);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -65,7 +64,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         }
 
         // GET: Admin/AppUsers/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -85,7 +84,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, AppUser appUser)
+        public async Task<IActionResult> Edit(int id, AppUser appUser)
         {
             if (id != appUser.Id)
             {
@@ -116,7 +115,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
         }
 
         // GET: Admin/AppUsers/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -148,7 +147,7 @@ namespace Eticaret.WebUI.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AppUserExists(Guid id)
+        private bool AppUserExists(int id)
         {
             return _context.AppUsers.Any(e => e.Id == id);
         }

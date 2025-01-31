@@ -34,8 +34,15 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Password)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
+        <dd class="col-sm-10">
+            <div class="input-group">
+                <input type="password" id="passwordDisplay" class="form-control" value="@Model.Password" readonly style="max-width: 100px;" />
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="togglePasswordDisplay" onclick="togglePasswordDisplay()">
+                        <i class="fas fa-eye" id="toggleIconDisplay"></i>
+                    </button>
+                </div>
+            </div>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.UserName)
@@ -73,3 +80,19 @@
     <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.Id">Düzenle</a>
     <a class="btn btn-outline-success mr-2" asp-action="Index">Listeye Dön</a>
 </div>
+<script>
+    function togglePasswordDisplay() {
+        var passwordInput = document.getElementById("passwordDisplay");
+        var toggleIcon = document.getElementById("toggleIconDisplay");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.classList.remove("fa-eye");
+            toggleIcon.classList.add("fa-eye-slash");
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.classList.remove("fa-eye-slash");
+            toggleIcon.classList.add("fa-eye");
+        }
+    }
+</script>

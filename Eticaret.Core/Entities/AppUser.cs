@@ -2,9 +2,10 @@
 
 namespace Eticaret.Core.Entities
 {
-	public class AppUser 
+    public class AppUser : IEntity
 	{
-		public Guid Id { get; set; }
+        public int Id { get; set; }
+        //public Guid Id { get; set; }
 
         [Display(Name ="Ad")]
         public string Name { get; set; }
@@ -34,6 +35,7 @@ namespace Eticaret.Core.Entities
         [ScaffoldColumn(false)]
         public Guid? UserGuid { get; set; } = Guid.NewGuid();
         public ICollection<Address>? Addresses { get; set; }
+        
         //public List<Address>? Addresses { get; set; }
     }
 }

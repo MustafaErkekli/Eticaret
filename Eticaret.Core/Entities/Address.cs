@@ -35,7 +35,7 @@ namespace Eticaret.Core.Entities
         public Guid? AddressGuid { get; set; } = Guid.NewGuid();
 
         [Display(Name = "Kullanıcı Mail")]
-        public Guid? AppUserId { get; set; }
+        public int? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
     }
 }

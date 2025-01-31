@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Eticaret.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class migOrdersAppuserId : Migration
+    public partial class migUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,8 @@ namespace Eticaret.Data.Migrations
                 name: "AppUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Surname = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
@@ -138,7 +139,7 @@ namespace Eticaret.Data.Migrations
                     IsDeliveryAddress = table.Column<bool>(type: "bit", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AddressGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    AppUserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -172,7 +173,8 @@ namespace Eticaret.Data.Migrations
                         name: "FK_Orders_AppUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AppUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -241,15 +243,15 @@ namespace Eticaret.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AppUsers",
                 columns: new[] { "Id", "CreateDate", "Email", "IsActive", "IsAdmin", "Name", "Password", "Phone", "Surname", "UserGuid", "UserName" },
-                values: new object[] { new Guid("29f4ae91-cf6f-4eac-81d3-9001925cf3bb"), new DateTime(2025, 1, 27, 11, 56, 24, 237, DateTimeKind.Local).AddTicks(354), "admineticaret.com", true, true, "Test", "123456*", null, "User", new Guid("af714f8c-2f27-4b7d-bef0-87accd1adaf5"), "Admin" });
+                values: new object[] { 1001, new DateTime(2025, 1, 27, 12, 26, 15, 34, DateTimeKind.Local).AddTicks(1415), "admineticaret.com", true, true, "Test", "123456*", null, "User", new Guid("75136c6c-4da2-42fc-ae54-192c580bd93c"), "Admin" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "CreateDate", "Description", "Image", "IsActive", "IsTopMenu", "Name", "OrderNo", "ParentId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 1, 27, 11, 56, 24, 239, DateTimeKind.Local).AddTicks(7245), null, null, true, true, "Elektronik", 1, 0 },
-                    { 2, new DateTime(2025, 1, 27, 11, 56, 24, 239, DateTimeKind.Local).AddTicks(8553), null, null, true, true, "Bilgisayar", 2, 0 }
+                    { 1, new DateTime(2025, 1, 27, 12, 26, 15, 36, DateTimeKind.Local).AddTicks(7936), null, null, true, true, "Elektronik", 1, 0 },
+                    { 2, new DateTime(2025, 1, 27, 12, 26, 15, 36, DateTimeKind.Local).AddTicks(9335), null, null, true, true, "Bilgisayar", 2, 0 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -268,9 +270,9 @@ namespace Eticaret.Data.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_AppUserId1",
+                name: "IX_Orders_AppUserId",
                 table: "Orders",
-                column: "AppUserId1");
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
