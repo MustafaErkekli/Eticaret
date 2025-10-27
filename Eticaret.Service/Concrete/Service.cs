@@ -1,4 +1,8 @@
-﻿using Eticaret.Core.Entities;
+﻿
+
+
+
+using Eticaret.Core.Entities;
 using Eticaret.Data;
 using Eticaret.Service.Abstract;
 using Microsoft.EntityFrameworkCore;

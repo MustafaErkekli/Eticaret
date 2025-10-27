@@ -47,5 +47,6 @@ namespace Eticaret.Core.Entities
 
         [Display(Name = "Kayıt Tarihi"), ScaffoldColumn(false)]
         public DateTime CreateDate { get; set; }= DateTime.Now;
+        public IList<ProductImage>? ProductImages { get; set; }
     }
 }

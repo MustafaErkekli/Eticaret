@@ -21,6 +21,7 @@ namespace Eticaret.Data
 		public DbSet<Address> Addresses { get; set; }
 		public DbSet<Order> Orders { get; set; }
 		public DbSet<OrderLine> OrderLines { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -28,7 +29,7 @@ namespace Eticaret.Data
             //    options.CommandTimeout(180)
 
             // 'Microsoft.EntityFrameworkCore.Migrations.PendingModelChangesWarning hatası için yazıldı
-            optionsBuilder.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)); 
+            //optionsBuilder.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)); 
 	
 
             if (!optionsBuilder.IsConfigured)

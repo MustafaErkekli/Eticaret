@@ -4,6 +4,7 @@ using Eticaret.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Eticaret.Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250619103032_ProductImage")]
+    partial class ProductImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,14 +133,14 @@ namespace Eticaret.Data.Migrations
                         new
                         {
                             Id = 1001,
-                            CreateDate = new DateTime(2025, 6, 19, 13, 35, 17, 651, DateTimeKind.Local).AddTicks(2964),
+                            CreateDate = new DateTime(2025, 6, 19, 13, 30, 31, 267, DateTimeKind.Local).AddTicks(9684),
                             Email = "admineticaret.com",
                             IsActive = true,
                             IsAdmin = true,
                             Name = "Test",
                             Password = "123456*",
                             Surname = "User",
-                            UserGuid = new Guid("361fc40d-efaf-4b3a-95e0-6a2b7aa1a091"),
+                            UserGuid = new Guid("19401693-61a1-4b7f-b402-f4d4d499e364"),
                             UserName = "Admin"
                         });
                 });
@@ -219,7 +222,7 @@ namespace Eticaret.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2025, 6, 19, 13, 35, 17, 651, DateTimeKind.Local).AddTicks(7312),
+                            CreateDate = new DateTime(2025, 6, 19, 13, 30, 31, 268, DateTimeKind.Local).AddTicks(2558),
                             IsActive = true,
                             IsTopMenu = true,
                             Name = "Elektronik",
@@ -229,7 +232,7 @@ namespace Eticaret.Data.Migrations
                         new
                         {
                             Id = 2,
-                            CreateDate = new DateTime(2025, 6, 19, 13, 35, 17, 651, DateTimeKind.Local).AddTicks(7322),
+                            CreateDate = new DateTime(2025, 6, 19, 13, 30, 31, 268, DateTimeKind.Local).AddTicks(2565),
                             IsActive = true,
                             IsTopMenu = true,
                             Name = "Bilgisayar",
@@ -464,7 +467,7 @@ namespace Eticaret.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImage");
                 });
 
             modelBuilder.Entity("Eticaret.Core.Entities.Slider", b =>

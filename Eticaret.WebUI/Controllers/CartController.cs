@@ -216,6 +216,22 @@ namespace Eticaret.WebUI.Controllers
                 });
             }
 
+            if (siparis.TotalPrice<999)
+            {
+                basketItems.Add(new BasketItem
+                {
+                    Id = "Kargo",
+                    Name = "Kargo Ücreti",
+                    Category1 = "Collectibles",
+                    ItemType = BasketItemType.VIRTUAL.ToString(),
+                    Price = "99",
+
+                });
+                siparis.TotalPrice += 99;
+                request.Price = siparis.TotalPrice.ToString().Replace(",", ".");
+                request.PaidPrice = siparis.TotalPrice.ToString().Replace(",", ".");
+            }
+
 
             request.BasketItems = basketItems;
 

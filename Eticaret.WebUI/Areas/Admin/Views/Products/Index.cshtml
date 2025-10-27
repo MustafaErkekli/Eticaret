@@ -3,13 +3,20 @@
 @{
     ViewData["Title"] = "Ürünler";
 }
+<style>
+    td.fixed-height{max-width:180px;height:22px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+    #example tbody tr td:last-child, td:nth-child(2) {
+        white-space: nowrap;
+    }
+</style>
 <div class="p-5">
     <p class="mt-2">
         <a asp-action="Create" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i>Yeni Ekle</a>
     </p>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/2.2.1/css/dataTables.bootstrap5.css" rel="stylesheet" />
-    <table id="example" class="table table-hover table-striped" style="width:100%">
+    <table id="example" class="table table-hover table-striped">
         <thead>
             <tr>
                 <th>
@@ -58,7 +65,16 @@
                     <td>
                         @if (!string.IsNullOrEmpty(item.Image))
                         {
-                            <img src="/Img/Products/@item.Image" height="60" width="80" style="border-radius: 5px;" />
+                            <a href="/Img/Products/@item.Image" class="btn btn-sm btn-default ms-2">
+                                <img src="/Img/Products/@item.Image" height="60" width="80" style="border-radius: 5px;" />
+                            </a>
+
+                            <a href="/Admin/ProductImages/Create?productId=@item.Id" title="Yeni Resim Ekle" target="_blank" class="btn btn-sm btn-default ms-2">
+                                <i class="fa-solid fa-plus"></i>
+                            </a>
+                            <a href="/Admin/ProductImages?productId=@item.Id" title="Ürün Resimleri" target="_blank" class="btn btn-sm btn-default ms-2">
+                                <i class="fa-solid fa-images"></i>
+                            </a>
                         }
                         else
                         {
@@ -102,7 +118,7 @@
 
 
         </tbody>
-    @*     <tfoot>
+        @*     <tfoot>
             <tr>
                 <th>Name</th>
                 <th>Position</th>
